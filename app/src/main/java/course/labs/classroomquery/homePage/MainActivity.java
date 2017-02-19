@@ -71,17 +71,17 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerview;
     private RecyclerAdapter mAdapter;
-    private PopupWindow popupWindow1,popupWindow2,popupWindow3;
+    private PopupWindow popupWindow1, popupWindow2, popupWindow3;
 
-    private ImageView image1,image2,image3;
-    private TextView textView1,textView2,textView3,wrongTextview;
-    private View view1,view2,view3;
-    private Layout layout1,layout2,layout3;
+    private ImageView image1, image2, image3;
+    private TextView textView1, textView2, textView3, wrongTextview;
+    private View view1, view2, view3;
+    private Layout layout1, layout2, layout3;
     private FrameLayout frame1;
     private LinearLayout mainTable;
-    private boolean hasPop1,hasPop2,hasPop3;
-    private Button backButton,gpsButton,collectButton;
-    private TableLayout tableLayout1,tableLayout2,tableLayout3,tableLayout4;
+    private boolean hasPop1, hasPop2, hasPop3;
+    private Button backButton, gpsButton, collectButton;
+    private TableLayout tableLayout1, tableLayout2, tableLayout3, tableLayout4;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int curWeek;
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private final int ITEM_TYPE_HOME = 0;
     private final int ITEM_TYPE_COLLECT = 1;
 
-    public static  int REQUEST_CODE = 0;
+    public static int REQUEST_CODE = 0;
     public static int RESULT_CODE = 1;
     private static int PERMISSION_REQUSET_CODE = 1;
     private static int LOAD_FINISHED = 2;
@@ -112,11 +112,12 @@ public class MainActivity extends AppCompatActivity {
     private Set<Integer> condition2_time;
     private Set<Integer> condition3;//0biaoshi
     private apiClient client;
-    private Animation animation,animation2;
+    private Animation animation, animation2;
 
     private final boolean isInDebugmode = false;
     private Set<ClassroomBean>[] setArray;
     private Handler mUIHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,98 +138,93 @@ public class MainActivity extends AppCompatActivity {
         checkState3 = new boolean[100];
         buttonarray1 = new Button[100];
         buttonarray2 = new Button[100];
-        buttonarray3 = new  Button[100];
-         client = new apiClient();
+        buttonarray3 = new Button[100];
+        client = new apiClient();
         setArray = new Set[300];
-        for(int i = 0;i < setArray.length;i++){
-            setArray[i]=  new HashSet<>();
+        for (int i = 0; i < setArray.length; i++) {
+            setArray[i] = new HashSet<>();
         }
 
         mUIHandler = new Handler() {
             @Override
-            public void handleMessage(Message msg){
-               if(msg.what==LOAD_FINISHED){
-                   Log.i("Handler","收到消息");
-                   for(int i = 1;i < backCnt;i++){
-                       Iterator<ClassroomBean> iterator = setArray[i].iterator();
-                       while(iterator.hasNext()){
-                           ClassroomBean classroomBean = iterator.next();
-                           if(!setArray[i-1].contains(classroomBean)){
-                               iterator.remove();
-                           }
-                       }
-                   }
-                   totalCnt++;
-                   System.out.println("totalCnt"+totalCnt);
-                   if(totalCnt>=condition1_buiding.size()){
-                       swipeRefreshLayout.setRefreshing(false);
-                       System.out.println("返回达到了教学楼数");
-                   }
+            public void handleMessage(Message msg) {
+                if (msg.what == LOAD_FINISHED) {
+                    Log.i("Handler", "收到消息");
+                    for (int i = 1; i < backCnt; i++) {
+                        Iterator<ClassroomBean> iterator = setArray[i].iterator();
+                        while (iterator.hasNext()) {
+                            ClassroomBean classroomBean = iterator.next();
+                            if (!setArray[i - 1].contains(classroomBean)) {
+                                iterator.remove();
+                            }
+                        }
+                    }
 
-                   curClassroomBeen.addAll(setArray[backCnt-1]);
-                   shaixuan();
 
-                   mAdapter.addAll(curClassroomBeen);
-                   backCnt = 0;
+                    curClassroomBeen.addAll(setArray[backCnt - 1]);
+                    shaixuan();
 
-               }
+                    mAdapter.addAll(curClassroomBeen);
+                    backCnt = 0;
+
+                }
             }
         };
         initialViews();
 
         initialListenersAndAmination();
 
-        if(!loadCampus()){
+        if (!loadCampus()) {
             dialog();
             initialButton();
             initialConditions();
-        }
-        else{
+        } else {
             initialButton();
             initialConditions();
             refreshData();
         }
 
     }
-    public void initialViews(){
-        frame1 = (FrameLayout)findViewById(R.id.frame1);
-        mainTable = (LinearLayout)findViewById(R.id.mainTable);
-        backButton = (Button)findViewById(R.id.backButton);
-        gpsButton = (Button)findViewById(R.id.positionButton);
-        collectButton = (Button)findViewById(R.id.collectButton);
+
+    public void initialViews() {
+        frame1 = (FrameLayout) findViewById(R.id.frame1);
+        mainTable = (LinearLayout) findViewById(R.id.mainTable);
+        backButton = (Button) findViewById(R.id.backButton);
+        gpsButton = (Button) findViewById(R.id.positionButton);
+        collectButton = (Button) findViewById(R.id.collectButton);
 
 
-        mRecyclerview = (RecyclerView)findViewById(R.id.recyclerView1);
+        mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView1);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RecyclerAdapter(getApplicationContext(),ITEM_TYPE_HOME);
+        mAdapter = new RecyclerAdapter(getApplicationContext(), ITEM_TYPE_HOME);
         mRecyclerview.setAdapter(mAdapter);
         RecyclerView.ItemDecoration decor = new SpacesItemDecoration(25);
-        mRecyclerview.addItemDecoration(decor,-1);
+        mRecyclerview.addItemDecoration(decor, -1);
         ((SimpleItemAnimator) mRecyclerview.getItemAnimator()).setSupportsChangeAnimations(false);
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
 
-        image1 = (ImageView)findViewById(R.id.arrow1);
-        image2 = (ImageView)findViewById(R.id.arrow2);
-        image3 = (ImageView)findViewById(R.id.arrow3);
-        textView1 = (TextView)findViewById(R.id.condition1);
-        textView2 = (TextView)findViewById(R.id.condition2);
-        textView3 = (TextView)findViewById(R.id.condition3);
-        wrongTextview = (TextView)findViewById(R.id.wrongTextView);
+        image1 = (ImageView) findViewById(R.id.arrow1);
+        image2 = (ImageView) findViewById(R.id.arrow2);
+        image3 = (ImageView) findViewById(R.id.arrow3);
+        textView1 = (TextView) findViewById(R.id.condition1);
+        textView2 = (TextView) findViewById(R.id.condition2);
+        textView3 = (TextView) findViewById(R.id.condition3);
+        wrongTextview = (TextView) findViewById(R.id.wrongTextView);
 
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view1 = inflater.inflate(R.layout.popupwindow1_layout,null);
-        view2 = inflater.inflate(R.layout.popupwindow2_layout,null);
-        view3 = inflater.inflate(R.layout.popupwindow3_layout,null);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view1 = inflater.inflate(R.layout.popupwindow1_layout, null);
+        view2 = inflater.inflate(R.layout.popupwindow2_layout, null);
+        view3 = inflater.inflate(R.layout.popupwindow3_layout, null);
 
-        tableLayout1 =(TableLayout) view1.findViewById(R.id.table1);
-        tableLayout2 =(TableLayout) view1.findViewById(R.id.table2);
-        tableLayout3 = (TableLayout)view2.findViewById(R.id.table3);
-        tableLayout4 = (TableLayout)view3.findViewById(R.id.table4);
+        tableLayout1 = (TableLayout) view1.findViewById(R.id.table1);
+        tableLayout2 = (TableLayout) view1.findViewById(R.id.table2);
+        tableLayout3 = (TableLayout) view2.findViewById(R.id.table3);
+        tableLayout4 = (TableLayout) view3.findViewById(R.id.table4);
 
-        popupWindow1 = new PopupWindow(view1, WindowManager.LayoutParams.FILL_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow2 = new PopupWindow(view2, WindowManager.LayoutParams.FILL_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow3 = new PopupWindow(view3, WindowManager.LayoutParams.FILL_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow1 = new PopupWindow(view1, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow2 = new PopupWindow(view2, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow3 = new PopupWindow(view3, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
 
         popupWindow1.setFocusable(true);
@@ -264,7 +260,8 @@ public class MainActivity extends AppCompatActivity {
         animation2.setFillAfter(!animation.getFillAfter());//
 
     }
-    public void initialListenersAndAmination(){
+
+    public void initialListenersAndAmination() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -290,17 +287,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, ChooseXiaoquActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         textView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // image1.startAnimation(animation);
-                if(hasPop1){
+                // image1.startAnimation(animation);
+                if (hasPop1) {
                     disimissPopupWindow1();
-                }
-                else{
+                } else {
                     showPopupWindow1();
                 }
             }
@@ -308,11 +304,10 @@ public class MainActivity extends AppCompatActivity {
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // image1.startAnimation(animation);
-                if(hasPop1){
+                // image1.startAnimation(animation);
+                if (hasPop1) {
                     disimissPopupWindow1();
-                }
-                else{
+                } else {
                     showPopupWindow1();
                 }
             }
@@ -320,11 +315,10 @@ public class MainActivity extends AppCompatActivity {
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // image2.startAnimation(animation);
-                if(hasPop2){
+                // image2.startAnimation(animation);
+                if (hasPop2) {
                     disimissPopupWindow2();
-                }
-                else{
+                } else {
                     showPopupWindow2();
                 }
             }
@@ -332,11 +326,10 @@ public class MainActivity extends AppCompatActivity {
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // image2.startAnimation(animation);
-                if(hasPop2){
+                // image2.startAnimation(animation);
+                if (hasPop2) {
                     disimissPopupWindow2();
-                }
-                else{
+                } else {
                     showPopupWindow2();
                 }
             }
@@ -345,10 +338,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //image3.startAnimation(animation);
-                if(hasPop3){
+                if (hasPop3) {
                     disimissPopupWindow3();
-                }
-                else{
+                } else {
                     showPopupWindow3();
                 }
             }
@@ -356,30 +348,29 @@ public class MainActivity extends AppCompatActivity {
         image3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // image3.startAnimation(animation);
-                if(hasPop2){
+                // image3.startAnimation(animation);
+                if (hasPop2) {
                     disimissPopupWindow3();
-                }
-                else{
+                } else {
                     showPopupWindow3();
                 }
             }
         });
 
 
-
     }
-    public void initialButton(){
+
+    public void initialButton() {
 
         int cnt1 = tableLayout1.getChildCount();
         int tagCnt = 0;
-        for(int i = 0;i<cnt1;i++){
+        for (int i = 0; i < cnt1; i++) {
             View view = tableLayout1.getChildAt(i);
-            if(view instanceof TableRow){
+            if (view instanceof TableRow) {
                 int cnt2 = ((TableRow) view).getChildCount();
-                for(int j = 0;j < cnt2;j++){
-                    if(((TableRow)view).getChildAt(j) instanceof Button) {
-                        buttonarray1[tagCnt] =  (Button) ((TableRow) view).getChildAt(j);
+                for (int j = 0; j < cnt2; j++) {
+                    if (((TableRow) view).getChildAt(j) instanceof Button) {
+                        buttonarray1[tagCnt] = (Button) ((TableRow) view).getChildAt(j);
                         tagCnt++;
                         switch (tagCnt) {
                             case 1:
@@ -390,39 +381,35 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                if(xiaoqu==NEW_CAMPUS) {
+                                if (xiaoqu == NEW_CAMPUS) {
                                     ((Button) ((TableRow) view).getChildAt(j)).setText("45楼");
-                                }
-                                else{
+                                } else {
                                     ((Button) ((TableRow) view).getChildAt(j)).setText("23楼");
                                 }
                                 break;
                             case 3:
-                                if(xiaoqu==NEW_CAMPUS) {
+                                if (xiaoqu == NEW_CAMPUS) {
                                     ((Button) ((TableRow) view).getChildAt(j)).setText("46楼");
-                                }
-                                else{
+                                } else {
                                     ((Button) ((TableRow) view).getChildAt(j)).setText("26楼");
                                 }
                                 break;
                             case 4:
                                 break;
-                            default:if(xiaoqu==OLD_CAMPUS){
-                                if(tagCnt<=34){
-                                    ((Button) ((TableRow) view).getChildAt(j)).setText(tagCnt-4+"楼");
+                            default:
+                                if (xiaoqu == OLD_CAMPUS) {
+                                    if (tagCnt <= 34) {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setText(tagCnt - 4 + "楼");
+                                    } else {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
+                                    }
+                                } else {
+                                    if (tagCnt <= 29) {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setText(30 + tagCnt - 3 + "楼");
+                                    } else {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                                else{
-                                    ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
-                                }
-                            }
-                                else{
-                                if(tagCnt<=29){
-                                    ((Button) ((TableRow) view).getChildAt(j)).setText(30+tagCnt-3+"楼");
-                                }
-                                else{
-                                    ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
-                                }
-                            }
                                 break;
                         }
                     }
@@ -430,15 +417,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-         cnt1 = tableLayout2.getChildCount();
+        cnt1 = tableLayout2.getChildCount();
 
-        for(int i = 0;i<cnt1;i++){
+        for (int i = 0; i < cnt1; i++) {
             View view = tableLayout2.getChildAt(i);
-            if(view instanceof TableRow){
+            if (view instanceof TableRow) {
                 int cnt2 = ((TableRow) view).getChildCount();
-                for(int j = 0;j < cnt2;j++){
-                    if(((TableRow)view).getChildAt(j) instanceof Button) {
-                        buttonarray1[tagCnt] =  (Button) ((TableRow) view).getChildAt(j);
+                for (int j = 0; j < cnt2; j++) {
+                    if (((TableRow) view).getChildAt(j) instanceof Button) {
+                        buttonarray1[tagCnt] = (Button) ((TableRow) view).getChildAt(j);
                         tagCnt++;
                         switch (tagCnt) {
                             case 1:
@@ -456,22 +443,20 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 4:
                                 break;
-                            default:if(xiaoqu==OLD_CAMPUS){
-                                if(tagCnt<=34){
-                                    ((Button) ((TableRow) view).getChildAt(j)).setText(tagCnt-4+"楼");
+                            default:
+                                if (xiaoqu == OLD_CAMPUS) {
+                                    if (tagCnt <= 34) {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setText(tagCnt - 4 + "楼");
+                                    } else {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
+                                    }
+                                } else {
+                                    if (tagCnt <= 29) {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setText(30 + tagCnt - 4 + "楼");
+                                    } else {
+                                        ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                                else{
-                                    ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
-                                }
-                            }
-                            else{
-                                if(tagCnt<=29){
-                                    ((Button) ((TableRow) view).getChildAt(j)).setText(30+tagCnt-4+"楼");
-                                }
-                                else{
-                                    ((Button) ((TableRow) view).getChildAt(j)).setVisibility(View.INVISIBLE);
-                                }
-                            }
                                 break;
                         }
                     }
@@ -481,66 +466,65 @@ public class MainActivity extends AppCompatActivity {
         }
         System.out.println(tagCnt);
         final int temp1 = tagCnt;
-       if(xiaoqu==OLD_CAMPUS){
+        if (xiaoqu == OLD_CAMPUS) {
 
-            for(int i = 1;i<tagCnt;i++){
+            for (int i = 1; i < tagCnt; i++) {
                 final int tempi = i;
                 buttonarray1[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new ButtonClickListner(MainActivity.this,tempi,buttonarray1,checkState1,0,temp1).onClick();
+                        new ButtonClickListner(MainActivity.this, tempi, buttonarray1, checkState1, 0, temp1).onClick();
                     }
                 });
 
             }
-       }
-        else{
-           for(int i = 1;i <tagCnt;i++){
-               final int tempi = i;
-               buttonarray1[i].setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       new ButtonClickListner(MainActivity.this,tempi,buttonarray1,checkState1,0,temp1).onClick();
-                   }
-               });
+        } else {
+            for (int i = 1; i < tagCnt; i++) {
+                final int tempi = i;
+                buttonarray1[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new ButtonClickListner(MainActivity.this, tempi, buttonarray1, checkState1, 0, temp1).onClick();
+                    }
+                });
 
-           }
-       }
+            }
+        }
 
         int cnt2 = tableLayout3.getChildCount();
         tagCnt = 0;
-        for(int i = 0;i < cnt2;i++){
-             View view = tableLayout3.getChildAt(i);
-             if(view instanceof TableRow){
-                 for(int j = 0;j < ((TableRow) view).getChildCount();j++){
-                     View tempView = ((TableRow) view).getChildAt(j);
-                     if(tempView instanceof Button) {
-                         buttonarray2[tagCnt] = (Button) tempView;
+        for (int i = 0; i < cnt2; i++) {
+            View view = tableLayout3.getChildAt(i);
+            if (view instanceof TableRow) {
+                for (int j = 0; j < ((TableRow) view).getChildCount(); j++) {
+                    View tempView = ((TableRow) view).getChildAt(j);
+                    if (tempView instanceof Button) {
+                        buttonarray2[tagCnt] = (Button) tempView;
 
 
-                         tagCnt++;
-                     }
-                 }
-             }
+                        tagCnt++;
+                    }
+                }
+            }
         }
         final int temp2 = tagCnt;
-        for(int i = 0;i < tagCnt;i++){
+        for (int i = 0; i < tagCnt; i++) {
             final int tempi = i;
             buttonarray2[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new ButtonClickListner(MainActivity.this,tempi,buttonarray2,checkState2,1,temp2).onClick();
+                    new ButtonClickListner(MainActivity.this, tempi, buttonarray2, checkState2, 1, temp2).onClick();
                 }
             });
         }
         int cnt3 = tableLayout4.getChildCount();
         tagCnt = 0;
-        for(int i = 0;i < cnt3;i++){
+        for (int i = 0; i < cnt3; i++) {
             View view = tableLayout4.getChildAt(i);
-            if(view instanceof TableRow){
-                for(int j = 0;j < ((TableRow) view).getChildCount();j++){
+            if (view instanceof TableRow) {
+                for (int j = 0; j < ((TableRow) view).getChildCount(); j++) {
                     View tempView = ((TableRow) view).getChildAt(j);
-                    if(tempView instanceof Button) {
+                    if (tempView instanceof Button) {
                         buttonarray3[tagCnt] = (Button) tempView;
 
                         tagCnt++;
@@ -549,17 +533,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         final int temp3 = tagCnt;
-        for(int i = 0;i < tagCnt;i++){
+        for (int i = 0; i < tagCnt; i++) {
             final int tempi = i;
             buttonarray3[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new ButtonClickListner(MainActivity.this,tempi,buttonarray3,checkState3,2,temp3).onClick();
+                    new ButtonClickListner(MainActivity.this, tempi, buttonarray3, checkState3, 2, temp3).onClick();
                 }
             });
         }
     }
-    public void initialConditions(){
+
+    public void initialConditions() {
         drawable = new GradientDrawable();
         drawable.setCornerRadius(15);
         drawable.setStroke(3, Color.parseColor("#9932CC"));
@@ -575,165 +560,175 @@ public class MainActivity extends AppCompatActivity {
         buttonarray2[0].setTextColor(getResources().getColor(R.color.purple));
         buttonarray2[0].setBackgroundDrawable(drawable);
     }
-    public void showPopupWindow1(){
-        image1.startAnimation(animation);
-        if(hasPop2){
-           disimissPopupWindow2();
-        }
-        if(hasPop3){
-           disimissPopupWindow3();
-        }
-       // mAdapter.clear();
 
-        if(!hasPop1) {
+    public void showPopupWindow1() {
+        image1.startAnimation(animation);
+        if (hasPop2) {
+            disimissPopupWindow2();
+        }
+        if (hasPop3) {
+            disimissPopupWindow3();
+        }
+        // mAdapter.clear();
+
+        if (!hasPop1) {
             popupWindow1.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
         }
         hasPop1 = true;
     }
-    public void showPopupWindow2(){
+
+    public void showPopupWindow2() {
         image2.startAnimation(animation);
-        if(hasPop1){
-           disimissPopupWindow1();
+        if (hasPop1) {
+            disimissPopupWindow1();
         }
-        if(hasPop3){
+        if (hasPop3) {
             disimissPopupWindow3();
         }
-       // mAdapter.clear();
+        // mAdapter.clear();
 
-        if(!hasPop2) {
+        if (!hasPop2) {
             popupWindow2.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
         }
         hasPop2 = true;
     }
-    public void showPopupWindow3(){
+
+    public void showPopupWindow3() {
         image3.startAnimation(animation);
-        if(hasPop1){
+        if (hasPop1) {
             disimissPopupWindow1();
         }
-        if(hasPop2){
+        if (hasPop2) {
             disimissPopupWindow2();
         }
-      //  mAdapter.clear();
+        //  mAdapter.clear();
 
-        if(!hasPop3) {
+        if (!hasPop3) {
             popupWindow3.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
         }
         hasPop3 = true;
     }
 
-    public void disimissPopupWindow1(){
+    public void disimissPopupWindow1() {
         image1.startAnimation(animation2);
-        if(hasPop1) {
+        if (hasPop1) {
             popupWindow1.dismiss();
         }
-         hasPop1 = false;
-         if(!hasPop1&&(!hasPop2)&&(!hasPop3)){
-             refreshData();
-         }
+        hasPop1 = false;
+        if (!hasPop1 && (!hasPop2) && (!hasPop3)) {
+            refreshData();
+        }
     }
-    public void disimissPopupWindow2(){
+
+    public void disimissPopupWindow2() {
         image2.startAnimation(animation2);
-        if(hasPop2) {
+        if (hasPop2) {
             popupWindow2.dismiss();
         }
         hasPop2 = false;
-        if(!hasPop1&&(!hasPop2)&&(!hasPop3)){
+        if (!hasPop1 && (!hasPop2) && (!hasPop3)) {
             refreshData();
         }
     }
-    public void disimissPopupWindow3(){
+
+    public void disimissPopupWindow3() {
         image3.startAnimation(animation2);
-        if(hasPop3) {
+        if (hasPop3) {
             popupWindow3.dismiss();
         }
         hasPop3 = false;
-        if(!hasPop1&&(!hasPop2)&&(!hasPop3)){
+        if (!hasPop1 && (!hasPop2) && (!hasPop3)) {
             refreshData();
         }
     }
-    public void refreshData(){
+
+    public void refreshData() {
         mAdapter.clear();
         condition1_buiding.clear();
         condition2_time.clear();
         condition3.clear();
         curClassroomBeen.clear();
         nextClassroomBeen.clear();
-        for(int i = 0;i < setArray.length;i++){
+        for (int i = 0; i < setArray.length; i++) {
             setArray[i].clear();
         }
         backCnt = 0;
         totalCnt = 0;
         swipeRefreshLayout.setRefreshing(true);
-        if(xiaoqu==OLD_CAMPUS) {
-            if(checkState1[1]){
+        if (xiaoqu == OLD_CAMPUS) {
+            if (checkState1[1]) {
                 condition1_buiding.add(Integer.valueOf(23));
             }
-            if(checkState1[2]){
+            if (checkState1[2]) {
                 condition1_buiding.add(Integer.valueOf(26));
             }
-            if(checkState1[3]){
-                for(int i = 1;i <=30;i++){
+            if (checkState1[3]) {
+                for (int i = 1; i <= 30; i++) {
                     condition1_buiding.add(Integer.valueOf(i));
                 }
             }
-            for (int i =4; i < 34; i++) {
+            for (int i = 4; i < 34; i++) {
                 if (checkState1[i]) {
-                    condition1_buiding.add(Integer.valueOf(i-3));
+                    condition1_buiding.add(Integer.valueOf(i - 3));
+                }
+            }
+        } else {
+            if (checkState1[1]) {
+                condition1_buiding.add(Integer.valueOf(45));
+            }
+            if (checkState1[2]) {
+                condition1_buiding.add(Integer.valueOf(46));
+            }
+            if (checkState1[3]) {
+                for (int i = 31; i <= 55; i++) {
+                    condition1_buiding.add(Integer.valueOf(i));
+                }
+            }
+            for (int i = 4; i < 34; i++) {
+                if (checkState1[i]) {
+
+                    condition1_buiding.add(Integer.valueOf(i - 4 + 30 + 1));
                 }
             }
         }
-        else{
-            if(checkState1[1]){
-                condition1_buiding.add(Integer.valueOf(45));
+        if (checkState2[0]) {
+            condition2_time.add(getNowCourse());
+        }
+        if (checkState2[1]) {
+            condition2_time.add(Integer.valueOf(1));
+            condition2_time.add(Integer.valueOf(3));
+            condition2_time.add(Integer.valueOf(5));
+            condition2_time.add(Integer.valueOf(7));
+            condition2_time.add(Integer.valueOf(9));
+        }
+        for (int i = 2; i <= 5; i++) {
+            if (checkState2[i]) {
+                condition2_time.add(Integer.valueOf(2 * (i - 1) - 1));
             }
-            if(checkState1[2]){
-                condition1_buiding.add(Integer.valueOf(46));
-            }
-            if(checkState1[3]){
-                for(int i = 31;i <=55;i++){
-                    condition1_buiding.add(Integer.valueOf(i));
+        }
+        homePageController newController = new homePageController() {
+            @Override
+            public void onNowClassroomReceived(Set<ClassroomBean> classrooms) {
+                if (classrooms != null) {
+                    Log.i("Controller", "返回数据不为空");
+                } else {
+                    Log.i("Controller", "返回数据为空");
                 }
-            }
-            for (int i =4; i < 34; i++) {
-                if (checkState1[i]) {
+                wrongTextview.setVisibility(View.GONE);
+                addTotalCnt();
+                setArray[backCnt++].addAll(classrooms);
+                if (backCnt == condition2_time.size()) {
+                    Message message = mUIHandler.obtainMessage(LOAD_FINISHED);
+                    message.sendToTarget();
 
-                    condition1_buiding.add(Integer.valueOf(i-4+30+1));
                 }
-              }
-          }
-           if(checkState2[0]){
-             condition2_time.add(getNowCourse());
-           }
-           if(checkState2[1]){
-               condition2_time.add(Integer.valueOf(1));
-               condition2_time.add(Integer.valueOf(3));
-               condition2_time.add(Integer.valueOf(5));
-               condition2_time.add(Integer.valueOf(7));
-               condition2_time.add(Integer.valueOf(9));
-           }
-           for(int i = 2;i <=5;i++){
-               if(checkState2[i]){
-                   condition2_time.add(Integer.valueOf(2*(i-1)-1));
-               }
-           }
-           homePageController newController = new homePageController() {
-               @Override
-               public void onNowClassroomReceived(Set<ClassroomBean> classrooms) {
-                   if(classrooms!=null){
-                       Log.i("Controller","返回数据不为空");
-                   }
-                   else{
-                       Log.i("Controller","返回数据为空");
-                   }
-                   wrongTextview.setVisibility(View.GONE);
-                   setArray[backCnt++].addAll(classrooms);
-                   if(backCnt==condition2_time.size()){
-                         Message message = mUIHandler.obtainMessage(LOAD_FINISHED);
-                         message.sendToTarget();
+                if (totalCnt == condition1_buiding.size() * condition2_time.size()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    System.out.println("返回达到了教学楼数");
+                }
 
-                   }
-                   //swipeRefreshLayout.setRefreshing(false);
-               }
+                //swipeRefreshLayout.setRefreshing(false);
+            }
 
              /*  @Override
                public void onNextClassroomReceived(Set<ClassroomBean> classrooms) {
@@ -742,22 +737,27 @@ public class MainActivity extends AppCompatActivity {
                    swipeRefreshLayout.setRefreshing(false);
                }*/
 
-               @Override
-               public void onError() {
-                   Log.i("Controller","OnError");
-                   swipeRefreshLayout.setRefreshing(false);
-                   wrongTextview.setVisibility(View.VISIBLE);
-               }
-           };
-        homePagePresenter mPresenter = new homePagePresenter(this,newController);
-        System.out.println("条件一个数"+condition1_buiding.size()+"条件二个数"+condition2_time.size());
-        for(int building:condition1_buiding){
-                  for(int time:condition2_time){
+            @Override
+            public void onError() {
+                Log.i("Controller", "OnError");
+                swipeRefreshLayout.setRefreshing(false);
+                addTotalCnt();
+                wrongTextview.setVisibility(View.VISIBLE);
+                if (totalCnt == condition1_buiding.size() * condition2_time.size()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    System.out.println("返回达到了教学楼数");
+                }
+            }
+        };
+        homePagePresenter mPresenter = new homePagePresenter(this, newController);
+        System.out.println("条件一个数" + condition1_buiding.size() + "条件二个数" + condition2_time.size());
+        for (int building : condition1_buiding) {
+            for (int time : condition2_time) {
 
 
-                      mPresenter.getCurClassrooms(building,time);
-                      //mPresenter.getNextClassrooms(building,time);
-                  }
+                mPresenter.getCurClassrooms(building, time);
+                //mPresenter.getNextClassrooms(building,time);
+            }
         }
        /* for(ClassroomBean classroomBean : curClassroomBeen){
             if(nextClassroomBeen.contains(classroomBean)){
@@ -769,50 +769,46 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
 
-
-        if(mAdapter.getItemCount()==0&&isInDebugmode){
+        if (mAdapter.getItemCount() == 0 && isInDebugmode) {
             wrongTextview.setVisibility(View.GONE);
-            ClassroomBean classroomBean =  new ClassroomBean(true,true,true,true,true,true,true,false,true,"45楼","B402");
-            ClassroomBean classroomBean2 =  new ClassroomBean(false,true,true,true,true,true,true,false,true,"45楼","B402");
+            ClassroomBean classroomBean = new ClassroomBean(true, true, true, true, true, true, true, false, true, "45楼", "B402");
+            ClassroomBean classroomBean2 = new ClassroomBean(false, true, true, true, true, true, true, false, true, "45楼", "B402");
             curClassroomBeen.add(classroomBean);
             curClassroomBeen.add(classroomBean2);
             shaixuan();
             mAdapter.addAll(curClassroomBeen);
-        }
-        else if((mAdapter.getItemCount()==0&&(!isInDebugmode))){
+        } else if ((mAdapter.getItemCount() == 0 && (!isInDebugmode))) {
             //wrongTextview.setVisibility(View.VISIBLE);
         }
-         System.out.println("适配器中元素个数"+mAdapter.getItemCount());
+        System.out.println("适配器中元素个数" + mAdapter.getItemCount());
 
     }
 
     private boolean res = false;
-    public boolean loadCampus(){
-        File file = new File(Environment.getExternalStorageDirectory()+"/TWT"+"/Cache.txt");
-        if(!file.exists()){
+
+    public boolean loadCampus() {
+        File file = new File(Environment.getExternalStorageDirectory() + "/TWT" + "/Cache.txt");
+        if (!file.exists()) {
             setXiaoqu(NEW_CAMPUS);
-            return  false;
-        }
-        else {
+            return false;
+        } else {
             res = true;
-            Observable.just(file).map(new Func1<File,Integer>() {
+            Observable.just(file).map(new Func1<File, Integer>() {
                 @Override
-                public Integer call(File file){
+                public Integer call(File file) {
                     try {
                         FileInputStream fileInputStream = new FileInputStream(file);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
                         int tempRes = -1;
                         String temp = null;
-                        while (null!=(temp=reader.readLine())){
+                        while (null != (temp = reader.readLine())) {
                             tempRes = Integer.valueOf(temp);
                         }
                         return Integer.valueOf(tempRes);
-                    }
-                    catch (FileNotFoundException e){
+                    } catch (FileNotFoundException e) {
 
-                        Log.i("File","No exist");
-                    }
-                    catch (IOException e) {
+                        Log.i("File", "No exist");
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     return null;
@@ -831,16 +827,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onNext(Integer integer) {
 
-                    if(integer!=null){setXiaoqu(integer);}
-                    else{res = false;}
+                    if (integer != null) {
+                        setXiaoqu(integer);
+                    } else {
+                        res = false;
+                    }
                 }
             });
 
 
-            return  res;
+            return res;
         }
     }
-    public void dialog(){
+
+    public void dialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("您还未设置校区，请前去设置");
@@ -849,8 +849,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this,ChooseXiaoquActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                intent.setClass(MainActivity.this, ChooseXiaoquActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 dialog.dismiss();
 
             }
@@ -867,13 +867,15 @@ public class MainActivity extends AppCompatActivity {
 
         builder.create().show();
     }
-    public boolean loadCommonItems(){
-        return  false;
-    }
-    public int getNowCourse(){
-       Date date = new Date(System.currentTimeMillis());
 
-        switch (date.getHours()){
+    public boolean loadCommonItems() {
+        return false;
+    }
+
+    public int getNowCourse() {
+        Date date = new Date(System.currentTimeMillis());
+
+        switch (date.getHours()) {
             case 8: {
                 if (date.getMinutes() < 30) {
                     return 0;
@@ -882,77 +884,89 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-            case 9: return 1;
-            case 10:if(date.getMinutes()<25) {
-                            return 1;
-                      }
-                    else{
-                     return  3;
-                    }
-            case 11:return 3;
+            case 9:
+                return 1;
+            case 10:
+                if (date.getMinutes() < 25) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 11:
+                return 3;
 
-            case 13:return  3;
-            case 14:return  5;
-            case 15:if(date.getMinutes()<25) {
-                       return 5;
-                     }
-                     else{
-                        return  7;
-                     }
+            case 13:
+                return 3;
+            case 14:
+                return 5;
+            case 15:
+                if (date.getMinutes() < 25) {
+                    return 5;
+                } else {
+                    return 7;
+                }
 
-            case 16:return  7;
-            case 17:return  7;
-            case 18:if(date.getMinutes()<30){
-                         return 7;
-                     }else{
-                        return 9;
-                      }
+            case 16:
+                return 7;
+            case 17:
+                return 7;
+            case 18:
+                if (date.getMinutes() < 30) {
+                    return 7;
+                } else {
+                    return 9;
+                }
 
-            case 19:return  9;
-            case 20:return  9;
-            case 21:return  9;
-            default:return  12;
+            case 19:
+                return 9;
+            case 20:
+                return 9;
+            case 21:
+                return 9;
+            default:
+                return 12;
         }
     }
-    public void writeItem(int xiaoqu){
-        try{
-            File file = new File(Environment.getExternalStorageDirectory()+"/TWT");
-            if(!file.exists()){
-                try{
-                    if(!file.mkdirs()){
+
+    public void writeItem(int xiaoqu) {
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + "/TWT");
+            if (!file.exists()) {
+                try {
+                    if (!file.mkdirs()) {
                         System.out.println("创建失败");
                     }
 
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("创建文件异常");
                 }
             }
-            File file2 =  new File(Environment.getExternalStorageDirectory()+"/TWT"+"/Cache.txt");
-            if(!file2.exists()){
+            File file2 = new File(Environment.getExternalStorageDirectory() + "/TWT" + "/Cache.txt");
+            if (!file2.exists()) {
 
                 file2.createNewFile();
             }
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file2,true));
-            bw.write(xiaoqu+"");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file2, true));
+            bw.write(xiaoqu + "");
             bw.newLine();
             bw.flush();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("写入异常");
         }
 
     }
-    public void setXiaoqu(int xiaoqu){
+
+    public void setXiaoqu(int xiaoqu) {
         this.xiaoqu = xiaoqu;
-        mAdapter.setXiaoqu(xiaoqu==NEW_CAMPUS?true:false);
+        mAdapter.setXiaoqu(xiaoqu == NEW_CAMPUS ? true : false);
     }
-    public void shaixuan(){
+
+    public void shaixuan() {
         Iterator<ClassroomBean> iterator = curClassroomBeen.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             ClassroomBean classroomBean = iterator.next();
             boolean[] conditions = new boolean[10];
             conditions[1] = classroomBean.isHasHeat();
@@ -960,28 +974,28 @@ public class MainActivity extends AppCompatActivity {
             conditions[3] = classroomBean.isHasElectricity();
             conditions[4] = classroomBean.isNearToliet();
             conditions[5] = classroomBean.isNearWater();
-            if(checkState3[0]){
-               for(int i = 1;i < 6;i++){
-                   if(!conditions[i]){
-                       iterator.remove();
-                       break;
-                   }
-               }
-            }
-            else{
-                for(int i = 1;i<=5;i++){
-                    if(checkState3[i]&&(!conditions[i])){
-                       iterator.remove();
+            if (checkState3[0]) {
+                for (int i = 1; i < 6; i++) {
+                    if (!conditions[i]) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 1; i <= 5; i++) {
+                    if (checkState3[i] && (!conditions[i])) {
+                        iterator.remove();
                         break;
                     }
                 }
             }
         }
     }
-    public void dealWithPermissions(){
+
+    public void dealWithPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this,
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -1032,17 +1046,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public synchronized void addTotalCnt() {
+        totalCnt++;
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        if (requestCode ==PERMISSION_REQUSET_CODE&&permissions.length>0)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
+        if (requestCode == PERMISSION_REQUSET_CODE && permissions.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-            } else
-            {
+            } else {
                 // Permission Denied
                 Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
@@ -1052,14 +1067,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         client.unSubscribe(this);
         super.onDestroy();
 
     }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.i("OnActivityResult","调用");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("OnActivityResult", "调用");
         Bundle bundle = data.getExtras();
         mAdapter.clear();
         condition1_buiding.clear();
@@ -1067,16 +1083,16 @@ public class MainActivity extends AppCompatActivity {
         condition3.clear();
 
 
-        if(requestCode==REQUEST_CODE&&resultCode==RESULT_CODE){
-            if(bundle.getInt("xiaoqu")==OLD_CAMPUS){
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_CODE) {
+            if (bundle.getInt("xiaoqu") == OLD_CAMPUS) {
                 setXiaoqu(OLD_CAMPUS);
                 writeItem(OLD_CAMPUS);
-                Log.i("返回值","尝试写入");
+                Log.i("返回值", "尝试写入");
             }
-            if(bundle.getInt("xiaoqu")==NEW_CAMPUS){
+            if (bundle.getInt("xiaoqu") == NEW_CAMPUS) {
                 setXiaoqu(NEW_CAMPUS);
                 writeItem(NEW_CAMPUS);
-                Log.i("返回值","尝试写入");
+                Log.i("返回值", "尝试写入");
             }
             initialButton();
             refreshData();

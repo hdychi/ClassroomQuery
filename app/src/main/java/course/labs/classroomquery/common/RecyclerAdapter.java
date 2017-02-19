@@ -454,17 +454,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
             CancelCollectController motionCotroller = new CancelCollectController() {
                 @Override
                 public void onError() {
-                    Toast.makeText(mContext,"取消收藏失败",Toast.LENGTH_SHORT).show();
+                       Toast.makeText(mContext,"取消收藏失败",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onNext(int data) {
-                    if(data>0) {
+                        System.out.println(data);
                         Toast.makeText(mContext, "取消收藏成功", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(mContext,"取消收藏失败",Toast.LENGTH_SHORT).show();
-                    }
+
                 }
             };
             CancelCollectPresenter mPresenter = new CancelCollectPresenter(mContext,motionCotroller);

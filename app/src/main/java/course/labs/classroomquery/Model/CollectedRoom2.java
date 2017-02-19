@@ -16,7 +16,7 @@ public class CollectedRoom2 {
     public class CollectedRoom {
         private int id;
         private String location_building;
-        private String classroom;
+        private String location_room;
         private String class_type;
         private String seating_num;
         private String is_classroom;
@@ -31,7 +31,7 @@ public class CollectedRoom2 {
 
 
         public String getClassroom(){
-            return location_building+classroom;
+            return location_building+location_room;
         }
 
         public boolean getHeating(){

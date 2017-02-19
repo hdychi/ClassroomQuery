@@ -24,5 +24,5 @@ public interface api {
        @GET("Classroom/roomCollection")
        Observable<APIReaponse<collectApiResponse>>collect(@Query("building") String buiding, @Query("userId") String token);
        @GET("Classroom/removeCollection")
-       Observable<APIReaponse>cancelCollect(@Query("userId") String token, @Query("buiding") String building);
+       Observable<APIReaponse>cancelCollect(@Query("userId") String token, @Query("building") String building);
 }

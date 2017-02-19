@@ -1,5 +1,6 @@
 package course.labs.classroomquery.API;
 
+import com.orhanobut.logger.Logger;
 import com.twt.wepeiyang.commons.utils.CommonPrefUtil;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import course.labs.classroomquery.Model.CollectedRoom2;
 import course.labs.classroomquery.Model.FreeRoom2;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import retrofit2.Retrofit;
@@ -21,6 +23,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+
+import static okhttp3.internal.platform.Platform.INFO;
+
 /**
  * Created by asus on 2017/1/23.
  */
@@ -35,15 +40,22 @@ public class apiClient{
 
     private api mService;
     public apiClient(){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> {
+            if (message.startsWith("{")){
+                Logger.json(message);
+            }else {
+                Platform.get().log(INFO, message, null);
+            }
+        });
 
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
 
 
 
         OkHttpClient client = new OkHttpClient.Builder()
 
-
+                .addInterceptor(loggingInterceptor)
                 .retryOnConnectionFailure(true)
 
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -130,9 +142,11 @@ public class apiClient{
 
     }
     public void getAllCollectClassroom(Object tag,Subscriber subscriber,String token,int week){
-        Subscription subscription = mService.getAllCollectedClassroom(token,week)
-                                              .map(new Func1<CollectedRoom2, List<CollectedRoom2.CollectedRoom>>() {
+        //TODO:用学号传参
+        Subscription subscription = mService.getAllCollectedClassroom("3015218114",week)
+                                               .map(new Func1<CollectedRoom2, List<CollectedRoom2.CollectedRoom>>() {
                                                   @Override
+
                                                   public List<CollectedRoom2.CollectedRoom> call(CollectedRoom2 room){
                                                       return  room.getData();
                                                   }
@@ -152,8 +166,8 @@ public class apiClient{
             System.out.println("Token是"+CommonPrefUtil.getToken());
         }
         System.out.println(building+":"+week+":"+time+":");
-
-        Subscription subscription = mService.getFreeClassroom(building,week,time,token)
+        //TODO:用学号传参
+        Subscription subscription = mService.getFreeClassroom(building,week,time,"3015218114")
                                               .map(new Func1<FreeRoom2, List<FreeRoom2.FreeRoom>>() {
                                                   @Override
                                                   public List<FreeRoom2.FreeRoom> call(FreeRoom2 room){
@@ -169,8 +183,9 @@ public class apiClient{
         addSubscription(tag, subscription);
     }
     public void collect(Object tag, Subscriber subscriber,String building,String token){
+        //TODO:用学号传参
         if(subscriber!=null){
-            Subscription subscription = mService.collect(building,token)
+            Subscription subscription = mService.collect(building,"3015218114")
 
                                                  .subscribeOn(Schedulers.io())
                                                  .observeOn(AndroidSchedulers.mainThread())
@@ -180,8 +195,9 @@ public class apiClient{
         }
     }
     public void cancelCollect(Object tag,Subscriber subscriber,String token,String building){
+        //TODO:用学号传参
         if(subscriber!=null){
-            Subscription subscription = mService.cancelCollect(token,building)
+            Subscription subscription = mService.cancelCollect("3015218114",building)
                                                   .map(new Func1<APIReaponse, Integer>() {
                                                       @Override
                                                       public Integer call(APIReaponse response){
