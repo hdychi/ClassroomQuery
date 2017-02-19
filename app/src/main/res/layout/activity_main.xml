@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/darkgray"
+    android:orientation="vertical"
+    tools:context=".homePage.MainActivity">
+   <android.support.v7.widget.CardView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:cardElevation="1dp"
+       android:background="@color/purple"
+       android:id="@+id/card">
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <FrameLayout
+               android:layout_width="match_parent"
+               android:layout_height="70dp"
+               android:id="@+id/frame1"
+               android:background="@color/purple" >
+               <android.support.v7.widget.Toolbar
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@color/purple"
+                   android:id="@+id/appBar"
+                   android:paddingTop="10dp">
+
+
+               </android.support.v7.widget.Toolbar>
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="match_parent"
+                   android:paddingTop="20dp"
+
+                   android:paddingLeft="10dp"
+                   android:paddingRight="10dp"
+                   >
+
+
+                   <Button
+                       android:layout_width="55dp"
+                       android:layout_height="wrap_content"
+
+
+                       android:background="@drawable/classroom_icon_back"
+                       android:id="@+id/backButton"
+                       android:layout_gravity="center"
+
+                       />
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="match_parent"
+                       android:text="自习室查询"
+                       android:layout_marginLeft="20dp"
+                       android:textColor="@color/White"
+                       android:textSize = "20dip"
+                       android:gravity="center"
+                       android:id = "@+id/textview"
+                       />
+                   <ImageView android:layout_width="wrap_content"
+                       android:layout_weight="5"
+                       android:layout_height="match_parent"/>
+                   <Button
+                       android:layout_width = "35dp"
+                       android:layout_height = "30dp"
+                       android:layout_marginRight="6dp"
+
+                       android:id="@+id/collectButton"
+                       android:background="@drawable/classroom_icon_collecte"
+                       android:layout_column="3"
+                       android:gravity="center"
+                       />
+
+                   <Button
+                       android:layout_width="55dp"
+                       android:layout_height="44dp"
+
+                       android:background="@drawable/classroom_icon_gps"
+                       android:gravity="bottom"
+                       android:id="@+id/positionButton"
+
+
+                       android:layout_gravity="center"
+                       />
+
+
+
+
+
+
+               </LinearLayout>
+
+           </FrameLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="50dp"
+               android:id="@+id/mainTable"
+               android:background="@color/purple"
+               android:orientation="horizontal"
+               android:paddingTop="20dp"
+               android:paddingLeft="25dp"
+               android:paddingRight="25px"
+               android:layout_below="@+id/frame1"
+               android:layout_alignParentStart="true">
+               <RelativeLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1">
+                   <TextView android:layout_width="wrap_content"
+
+                       android:layout_height="wrap_content"
+                       android:id="@+id/condition1"
+                       android:paddingTop="5dp"
+
+                       android:text="教学楼"
+                       android:clickable="true"
+                       android:textColor="@color/White"/>
+                   <ImageView android:layout_width="25dp"
+                       android:layout_height="fill_parent"
+                       android:clickable="true"
+                       android:id="@+id/arrow1"
+                       android:layout_toRightOf="@+id/condition1"
+                       android:background="@drawable/classroom_down_arrow"/>
+               </RelativeLayout>
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_weight="3"/>
+               <RelativeLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1">
+                   <TextView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+
+                       android:id="@+id/condition2"
+                       android:paddingTop="5dp"
+                       android:text="时间段"
+                       android:clickable="true"
+                       android:textColor="@color/White"/>
+                   <ImageView android:layout_width="25dp"
+                       android:layout_height="fill_parent"
+                       android:layout_toRightOf="@+id/condition2"
+                       android:clickable="true"
+                       android:id="@+id/arrow2"
+                       android:background="@drawable/classroom_down_arrow"/>
+               </RelativeLayout>
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_weight="3"/>
+               <RelativeLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1">
+                   <TextView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+
+                       android:paddingTop="5dp"
+                       android:id="@+id/condition3"
+                       android:clickable="true"
+                       android:text="筛选"
+                       android:textColor="@color/White"/>
+                   <ImageView android:layout_width="25dp"
+                       android:layout_height="fill_parent"
+                       android:clickable="true"
+                       android:layout_toRightOf="@+id/condition3"
+                       android:id="@+id/arrow3"
+                       android:background="@drawable/classroom_down_arrow"/>
+               </RelativeLayout>
+
+
+           </LinearLayout>
+       </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainFrame"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+
+        android:layout_below="@+id/card">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/wrongTextView"
+            android:text="哎呀，网络出错了呢！"
+            android:visibility="gone"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/swipeRefreshLayout">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:id ="@+id/recyclerView1">
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
