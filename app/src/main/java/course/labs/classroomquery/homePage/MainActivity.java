@@ -150,23 +150,25 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 if (msg.what == LOAD_FINISHED) {
                     Log.i("Handler", "收到消息");
-                    for (int i = 1; i < backCnt; i++) {
-                        Iterator<ClassroomBean> iterator = setArray[i].iterator();
-                        while (iterator.hasNext()) {
-                            ClassroomBean classroomBean = iterator.next();
-                            if (!setArray[i - 1].contains(classroomBean)) {
-                                iterator.remove();
+                    synchronized (this) {
+                        for (int i = 1; i < backCnt; i++) {
+                            Iterator<ClassroomBean> iterator = setArray[i].iterator();
+                            while (iterator.hasNext()) {
+                                ClassroomBean classroomBean = iterator.next();
+                                if (!setArray[i - 1].contains(classroomBean)) {
+                                    System.out.println();
+                                    iterator.remove();
+                                }
                             }
                         }
+
+
+                        curClassroomBeen.addAll(setArray[backCnt - 1]);
+                        shaixuan();
+
+                        mAdapter.addAll(curClassroomBeen);
+                        backCnt = 0;
                     }
-
-
-                    curClassroomBeen.addAll(setArray[backCnt - 1]);
-                    shaixuan();
-
-                    mAdapter.addAll(curClassroomBeen);
-                    backCnt = 0;
-
                 }
             }
         };
@@ -692,7 +694,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (checkState2[0]) {
-            condition2_time.add(getNowCourse());
+            condition2_time.add(0);
         }
         if (checkState2[1]) {
             condition2_time.add(Integer.valueOf(1));
@@ -709,23 +711,41 @@ public class MainActivity extends AppCompatActivity {
         homePageController newController = new homePageController() {
             @Override
             public void onNowClassroomReceived(Set<ClassroomBean> classrooms) {
+                wrongTextview.setVisibility(View.GONE);
+                addTotalCnt();
                 if (classrooms != null) {
+                    synchronized (this) {
+                        setArray[backCnt++].addAll(classrooms);
+                        if (backCnt == condition2_time.size()) {
+                            /*Message message = mUIHandler.obtainMessage(LOAD_FINISHED);
+                            message.sendToTarget();*/
+                            for (int i = 1; i < backCnt; i++) {
+                                Iterator<ClassroomBean> iterator = setArray[i].iterator();
+                                while (iterator.hasNext()) {
+                                    ClassroomBean classroomBean = iterator.next();
+                                    if (!setArray[i - 1].contains(classroomBean)) {
+                                        System.out.println();
+                                        iterator.remove();
+                                    }
+                                }
+                            }
+
+
+                            curClassroomBeen.addAll(setArray[backCnt - 1]);
+                            shaixuan();
+
+                            mAdapter.addAll(curClassroomBeen);
+                            backCnt = 0;
+
+                        }
+                    }
                     Log.i("Controller", "返回数据不为空");
                 } else {
                     Log.i("Controller", "返回数据为空");
                 }
-                wrongTextview.setVisibility(View.GONE);
-                addTotalCnt();
-                setArray[backCnt++].addAll(classrooms);
-                if (backCnt == condition2_time.size()) {
-                    Message message = mUIHandler.obtainMessage(LOAD_FINISHED);
-                    message.sendToTarget();
 
-                }
-                if (totalCnt == condition1_buiding.size() * condition2_time.size()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    System.out.println("返回达到了教学楼数");
-                }
+
+
 
                 //swipeRefreshLayout.setRefreshing(false);
             }
@@ -743,10 +763,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 addTotalCnt();
                 wrongTextview.setVisibility(View.VISIBLE);
-                if (totalCnt == condition1_buiding.size() * condition2_time.size()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    System.out.println("返回达到了教学楼数");
-                }
+
             }
         };
         homePagePresenter mPresenter = new homePagePresenter(this, newController);
@@ -1049,6 +1066,10 @@ public class MainActivity extends AppCompatActivity {
 
     public synchronized void addTotalCnt() {
         totalCnt++;
+        if (totalCnt == condition1_buiding.size() * condition2_time.size()) {
+            swipeRefreshLayout.setRefreshing(false);
+            System.out.println("返回达到了教学楼数");
+        }
     }
 
     @Override

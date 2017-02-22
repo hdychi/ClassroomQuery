@@ -180,13 +180,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
 
                    time.setText(formatter.format(timeShow));
                }
-               if (nowItem.getState().equals("空闲")) {
+               //if (nowItem.getState().equals("空闲")) {
                    image1.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_empty));
-               } else if (nowItem.getState().equals("即将下课")) {
-                   image1.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_willbeempty));
-               } else {
+              // } else if (nowItem.getState().equals("即将下课")) {
+              /*     image1.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_willbeempty));
+               } else if(nowItem.getState().equals("即将上课")){
                    image1.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_willhaveclass));
                }
+               else{
+                   image1.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_inclass));
+               }*/
                int cnt = 0;//其他条件的个数
                Date curDate = new Date(System.currentTimeMillis());
                int month = curDate.getMonth();

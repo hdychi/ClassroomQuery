@@ -87,6 +87,7 @@ public class CollectPageActivity extends Activity {
            public void onError() {
 
                swipeRefreshLayout.setRefreshing(false);
+               textView.setVisibility(View.VISIBLE);
            }
        };
         new CollectPagePresenter(this,newController).getClassrooms();

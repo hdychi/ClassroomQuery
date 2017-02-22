@@ -65,14 +65,17 @@ public class homePagePresenter {
 
 
                 if(classrooms!=null) {
-
-                    Log.i("Presenter","返回数据不为空");
-                    for(FreeRoom2.FreeRoom mroom:classrooms){
-                        curClassroomBeen.add(new ClassroomBean(mroom));
-                    }
-                    mController.onNowClassroomReceived(curClassroomBeen);
+                   synchronized (this) {
+                       Log.i("Presenter", "返回数据不为空");
+                       for (FreeRoom2.FreeRoom mroom : classrooms) {
+                           if(!mroom.getState().equals("上课中"))
+                           curClassroomBeen.add(new ClassroomBean(mroom));
+                       }
+                       mController.onNowClassroomReceived(curClassroomBeen);
+                   }
                 }
                 else{
+                    mController.onNowClassroomReceived(curClassroomBeen);
                     Log.i("网络","数据无返回");
                 }
             }
@@ -135,11 +138,14 @@ public class homePagePresenter {
     }*/
 
     public int getWeek(){
-        Date date = new Date(System.currentTimeMillis());
-        int year = date.getYear();
-        int month = date.getMonth();
-        int day = date.getDate();
+        final Calendar c= Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        c.setTimeInMillis(System.currentTimeMillis());
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DATE);
         int totalDays = 0;
+        System.out.println("时间"+year+"/"+month+"/"+day);
         if(year>TERM_START_YEAR){
             totalDays+=getMonthDay(TERM_START_MONTH)-TERM_START_DAY+1;
             for(int i = TERM_START_MONTH+1;i<=12;i++){

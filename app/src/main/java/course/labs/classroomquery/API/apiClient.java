@@ -165,7 +165,7 @@ public class apiClient{
             //System.out.println("Token is not null");
             System.out.println("Token是"+CommonPrefUtil.getToken());
         }
-        System.out.println(building+":"+week+":"+time+":");
+        System.out.println("请求信息"+building+":"+week+":"+time+":");
         //TODO:用学号传参
         Subscription subscription = mService.getFreeClassroom(building,week,time,"3015218114")
                                               .map(new Func1<FreeRoom2, List<FreeRoom2.FreeRoom>>() {
