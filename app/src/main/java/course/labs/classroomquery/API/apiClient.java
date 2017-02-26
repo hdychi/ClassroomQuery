@@ -143,7 +143,8 @@ public class apiClient{
     }
     public void getAllCollectClassroom(Object tag,Subscriber subscriber,String token,int week){
         //TODO:用学号传参
-        Subscription subscription = mService.getAllCollectedClassroom("3015218114",week)
+
+        Subscription subscription = mService.getAllCollectedClassroom(CommonPrefUtil.getUserId(),week)
                                                .map(new Func1<CollectedRoom2, List<CollectedRoom2.CollectedRoom>>() {
                                                   @Override
 
@@ -166,8 +167,9 @@ public class apiClient{
             System.out.println("Token是"+CommonPrefUtil.getToken());
         }
         System.out.println("请求信息"+building+":"+week+":"+time+":");
+        System.out.println("学号是"+CommonPrefUtil.getUserId());
         //TODO:用学号传参
-        Subscription subscription = mService.getFreeClassroom(building,week,time,"3015218114")
+        Subscription subscription = mService.getFreeClassroom(building,week,time,CommonPrefUtil.getUserId())
                                               .map(new Func1<FreeRoom2, List<FreeRoom2.FreeRoom>>() {
                                                   @Override
                                                   public List<FreeRoom2.FreeRoom> call(FreeRoom2 room){
@@ -185,7 +187,7 @@ public class apiClient{
     public void collect(Object tag, Subscriber subscriber,String building,String token){
         //TODO:用学号传参
         if(subscriber!=null){
-            Subscription subscription = mService.collect(building,"3015218114")
+            Subscription subscription = mService.collect(building,CommonPrefUtil.getUserId())
 
                                                  .subscribeOn(Schedulers.io())
                                                  .observeOn(AndroidSchedulers.mainThread())
@@ -197,7 +199,7 @@ public class apiClient{
     public void cancelCollect(Object tag,Subscriber subscriber,String token,String building){
         //TODO:用学号传参
         if(subscriber!=null){
-            Subscription subscription = mService.cancelCollect("3015218114",building)
+            Subscription subscription = mService.cancelCollect(CommonPrefUtil.getUserId(),building)
                                                   .map(new Func1<APIReaponse, Integer>() {
                                                       @Override
                                                       public Integer call(APIReaponse response){
@@ -209,6 +211,7 @@ public class apiClient{
                                                           }
                                                       }
                                                   })
+
                                                   .subscribeOn(Schedulers.io())
                                                   .observeOn(AndroidSchedulers.mainThread())
                                                    .unsubscribeOn(Schedulers.io())
