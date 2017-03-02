@@ -137,13 +137,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
             final ImageView image3 = (ImageView)itemLayout.findViewById(R.id.image3);
             final ImageView image4 = (ImageView)itemLayout.findViewById(R.id.image4);
             final ImageView image5 = (ImageView)itemLayout.findViewById(R.id.image5);
-            final ImageView image6 = (ImageView)itemLayout.findViewById(R.id.image6);
+           // final ImageView image6 = (ImageView)itemLayout.findViewById(R.id.image6);
 
             image2.setVisibility(View.INVISIBLE);
             image3.setVisibility(View.INVISIBLE);
             image4.setVisibility(View.INVISIBLE);
             image5.setVisibility(View.INVISIBLE);
-            image6.setVisibility(View.INVISIBLE);
+          //  image6.setVisibility(View.INVISIBLE);
 
             classRoomName.setText(nowItem.getRoomNumber());
             button.setOnClickListener(new View.OnClickListener() {
@@ -311,10 +311,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
                            image2.setVisibility(View.VISIBLE);
                            image2.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_heat));
                        }
-                       if(cnt==1){
-                           image3.setVisibility(View.VISIBLE);
-                           image3.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_heat));
-                       }
+
                        cnt++;
                    }
 
@@ -324,20 +321,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
                           image2.setVisibility(View.VISIBLE);
                           image2.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_airconditioning));
                       }
-                       if(cnt==1){
-                           image3.setVisibility(View.VISIBLE);
-                           image3.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_airconditioning));
-                       }
+
                        cnt++;
                    } else {
                        if(cnt==0) {
                            image2.setVisibility(View.VISIBLE);
                            image2.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_fan));
                        }
-                       if(cnt==1){
-                           image3.setVisibility(View.VISIBLE);
-                           image3.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_fan));
-                       }
+
 
 
                        cnt++;
@@ -353,10 +344,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
                        image3.setVisibility(View.VISIBLE);
                        image3.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_toilet));
                    }
-                   if (cnt == 2) {
-                       image4.setVisibility(View.VISIBLE);
-                       image4.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_toilet));
-                   }
+
 
                    cnt++;
                }
@@ -374,10 +362,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
                        image4.setVisibility(View.VISIBLE);
                        image4.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroomtag_electricityt));
                    }
-                   if (cnt == 3) {
-                       image5.setVisibility(View.VISIBLE);
-                       image5.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroomtag_electricityt));
-                   }
+
 
                    cnt++;
                }
@@ -396,10 +381,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<IViewHolder> {
                        image5.setVisibility(View.VISIBLE);
                        image5.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_yinshuiji));
                    }
-                   else {
-                       image6.setVisibility(View.VISIBLE);
-                       image6.setImageDrawable(mContext.getResources().getDrawable(R.drawable.classroom_tag_yinshuiji));
-                   }
+
                    cnt++;
                }
            }
