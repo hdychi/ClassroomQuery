@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,9 +38,12 @@ public class ChooseXiaoquActivity extends Activity {
     private int OLD_CAMPUS = 0;
     private int NEW_CAMPUS = 1;
     private boolean res;
+    private Window window;
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
+        window = this.getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.purple));
         setContentView(R.layout.choose_xiaoqu_layout);
 
         xiaoqu = -1;
