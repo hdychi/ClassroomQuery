@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.os.Handler;
@@ -40,6 +41,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kelin.mvvmlight.base.ViewModel;
+import com.orhanobut.hawk.Hawk;
+import com.twt.wepeiyang.commons.utils.CommonPrefUtil;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -58,15 +63,18 @@ import java.util.logging.LogRecord;
 import course.labs.classroomquery.API.apiClient;
 import course.labs.classroomquery.Model.ClassroomBean;
 import course.labs.classroomquery.Model.SpacesItemDecoration;
+import course.labs.classroomquery.Model.userId;
 import course.labs.classroomquery.chooseXiaoqu.ChooseXiaoquActivity;
 import course.labs.classroomquery.CollectPage.CollectPageActivity;
 import course.labs.classroomquery.R;
 import course.labs.classroomquery.common.RecyclerAdapter;
+import course.labs.classroomquery.getUserId.getUserIdController;
+import course.labs.classroomquery.getUserId.getUserIdPresenter;
 import rx.Observable;
 import rx.Observer;
 import rx.functions.Func1;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewModel{
     private GradientDrawable drawable;
 
     private RecyclerView mRecyclerview;
@@ -117,15 +125,28 @@ public class MainActivity extends AppCompatActivity {
     private final boolean isInDebugmode = false;
     private Set<ClassroomBean>[] setArray;
     private Handler mUIHandler;
+    private Window window;
 
+    private int statusBarHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+       // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+       // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        window = this.getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.purple));
+        int resourceId =getResources().getIdentifier("status_bar_height","dimen","android");
+        if(resourceId>0){
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        else{
+            Log.i("状态栏","id为0");
+        }
         setContentView(R.layout.activity_main);
+        getId();
         dealWithPermissions();
+
 
 
         condition1_buiding = new HashSet<Integer>();
@@ -574,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
         // mAdapter.clear();
 
         if (!hasPop1) {
-            popupWindow1.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
+            popupWindow1.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, statusBarHeight+findViewById(R.id.card).getHeight());
         }
         hasPop1 = true;
     }
@@ -590,7 +611,7 @@ public class MainActivity extends AppCompatActivity {
         // mAdapter.clear();
 
         if (!hasPop2) {
-            popupWindow2.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
+            popupWindow2.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0,statusBarHeight+findViewById(R.id.card).getHeight());
         }
         hasPop2 = true;
     }
@@ -606,7 +627,7 @@ public class MainActivity extends AppCompatActivity {
         //  mAdapter.clear();
 
         if (!hasPop3) {
-            popupWindow3.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0, frame1.getHeight() + mainTable.getHeight());
+            popupWindow3.showAtLocation(MainActivity.this.findViewById(R.id.mainFrame), Gravity.TOP, 0,statusBarHeight+ findViewById(R.id.card).getHeight());
         }
         hasPop3 = true;
     }
@@ -656,7 +677,9 @@ public class MainActivity extends AppCompatActivity {
         }
         backCnt = 0;
         totalCnt = 0;
-        swipeRefreshLayout.setRefreshing(true);
+        if(condition1_buiding.size()>0&&condition2_time.size()>0) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
         if (xiaoqu == OLD_CAMPUS) {
             if (checkState1[1]) {
                 condition1_buiding.add(Integer.valueOf(23));
@@ -703,7 +726,7 @@ public class MainActivity extends AppCompatActivity {
             condition2_time.add(Integer.valueOf(7));
             condition2_time.add(Integer.valueOf(9));
         }
-        for (int i = 2; i <= 5; i++) {
+        for (int i = 2; i <= 6; i++) {
             if (checkState2[i]) {
                 condition2_time.add(Integer.valueOf(2 * (i - 1) - 1));
             }
@@ -716,26 +739,47 @@ public class MainActivity extends AppCompatActivity {
                 if (classrooms != null) {
                     synchronized (this) {
                         setArray[backCnt++].addAll(classrooms);
-                        if (backCnt == condition2_time.size()) {
+                        if (backCnt == condition2_time.size()*condition1_buiding.size()) {
                             /*Message message = mUIHandler.obtainMessage(LOAD_FINISHED);
                             message.sendToTarget();*/
-                            for (int i = 1; i < backCnt; i++) {
+                            for (int i = 0; i < backCnt; i++) {
+
                                 Iterator<ClassroomBean> iterator = setArray[i].iterator();
                                 while (iterator.hasNext()) {
+
                                     ClassroomBean classroomBean = iterator.next();
-                                    if (!setArray[i - 1].contains(classroomBean)) {
-                                        System.out.println();
-                                        iterator.remove();
+                                    Log.i("教学楼遍历",i+" : "+classroomBean.getRoomNumber());
+                                    boolean isAllExist = true;
+                                    for(int j = 0;j < backCnt;j++){
+                                        Log.i("教学楼",classroomBean.getBuilding()+" "+setArray[j].iterator().next().getBuilding());
+                                        if(j!=i) {
+                                            if ((setArray[j].iterator().hasNext()&&setArray[j].iterator().next().getBuilding()==classroomBean.getBuilding())) {
+                                                boolean isExist = false;
+                                                for(ClassroomBean bean:setArray[j]){
+                                                    if(bean.equals(classroomBean)){
+                                                        isExist = true;
+                                                    }
+                                                }
+                                                if(!isExist) {
+                                                    isAllExist = false;
+                                                    Log.i("筛选", classroomBean.getRoomNumber() + "backCnt" + backCnt);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                    if (isAllExist) {
+                                        curClassroomBeen.add(classroomBean);
                                     }
                                 }
                             }
 
 
-                            curClassroomBeen.addAll(setArray[backCnt - 1]);
+
                             shaixuan();
 
                             mAdapter.addAll(curClassroomBeen);
-                            backCnt = 0;
+
 
                         }
                     }
@@ -788,8 +832,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (mAdapter.getItemCount() == 0 && isInDebugmode) {
             wrongTextview.setVisibility(View.GONE);
-            ClassroomBean classroomBean = new ClassroomBean(true, true, true, true, true, true, true, false, true, "45楼", "B402");
-            ClassroomBean classroomBean2 = new ClassroomBean(false, true, true, true, true, true, true, false, true, "45楼", "B402");
+            ClassroomBean classroomBean = new ClassroomBean(true, true, true, true, true, true, true, false, true, 45, "B402");
+            ClassroomBean classroomBean2 = new ClassroomBean(false, true, true, true, true, true, true, false, true, 45, "B402");
             curClassroomBeen.add(classroomBean);
             curClassroomBeen.add(classroomBean2);
             shaixuan();
@@ -1071,7 +1115,23 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("返回达到了教学楼数");
         }
     }
+    public void getId(){
+        getUserIdController mController = new getUserIdController() {
+            @Override
+            public void onNext(userId id) {
+                System.out.println("请求学号是"+id.getID());
+                Hawk.put("userId",id.getID());
 
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(getApplicationContext(),"获得信息出错",Toast.LENGTH_SHORT).show();
+            }
+        };
+        getUserIdPresenter mPresenter = new getUserIdPresenter(this,mController);
+        mPresenter.getUserId(CommonPrefUtil.getToken());
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
