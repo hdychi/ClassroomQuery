@@ -46,7 +46,7 @@ public class CommonPrefUtil {
         return Hawk.get(IS_LOGIN,false);
     }
     public static String getUserId(){
-        return Hawk.get("userId");
+        return Hawk.get("userId","3015204342");
     }
     public static void setThemeMode(boolean themeMode){
         Hawk.put(THEME_MODE,themeMode);
