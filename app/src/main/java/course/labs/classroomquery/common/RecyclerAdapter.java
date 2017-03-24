@@ -17,11 +17,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import course.labs.classroomquery.Model.ClassroomBean;
 import course.labs.classroomquery.R;
-import course.labs.classroomquery.homePage.IViewHolder;
 
 /**
  * Created by asus on 2017/1/23.

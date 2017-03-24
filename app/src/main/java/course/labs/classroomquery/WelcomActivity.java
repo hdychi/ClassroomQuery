@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
@@ -13,6 +15,9 @@ import com.twt.wepeiyang.commons.auth.login.LoginActivity;
 import com.twt.wepeiyang.commons.utils.CommonPrefUtil;
 
 
+import course.labs.classroomquery.Model.userId;
+import course.labs.classroomquery.getUserId.getUserIdController;
+import course.labs.classroomquery.getUserId.getUserIdPresenter;
 import course.labs.classroomquery.homePage.MainActivity;
 
 /**
@@ -31,9 +36,10 @@ public class WelcomActivity extends Activity {
 
         if (isLogin){
             System.out.println("Token是"+CommonPrefUtil.getToken());
-            Intent intent = new Intent(this, MainActivity.class);
-
-            startActivity(intent);
+            if(CommonPrefUtil.getToken()!=null) {
+                startAPP();
+                finish();
+            }
 
         }else {
 
@@ -64,5 +70,10 @@ public class WelcomActivity extends Activity {
     protected void onStop(){
         super.onStop();
         finish();
+    }
+    public void startAPP(){
+        Intent intent = new Intent(this, MainActivity.class);
+
+        startActivity(intent);
     }
 }

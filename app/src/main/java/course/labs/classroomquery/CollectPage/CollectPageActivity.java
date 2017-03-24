@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,8 +32,11 @@ public class CollectPageActivity extends Activity {
     private final int ITEM_TYPE_HOME = 0;
     private final int ITEM_TYPE_COLLECT = 1;
     private final boolean isInDebugmode = false;
+    private Window window;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        window = this.getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.purple));
         setContentView(R.layout.collect);
         initialView();
         getClassrooms();
@@ -98,8 +102,8 @@ public class CollectPageActivity extends Activity {
         mAdapter.addAll(mCclassrooms);
         if(mAdapter.getItemCount()==0&&isInDebugmode){
             textView.setVisibility(View.GONE);
-            ClassroomBean classroomBean =  new ClassroomBean(true,true,true,true,true,true,true,false,true,"45楼","B402");
-            ClassroomBean classroomBean2 =  new ClassroomBean(false,true,true,true,true,true,true,false,true,"45楼","B402");
+            ClassroomBean classroomBean =  new ClassroomBean(true,true,true,true,true,true,true,false,true,45,"B402");
+            ClassroomBean classroomBean2 =  new ClassroomBean(false,true,true,true,true,true,true,false,true,45,"B402");
 
             mAdapter.add(classroomBean);
             mAdapter.add(classroomBean2);

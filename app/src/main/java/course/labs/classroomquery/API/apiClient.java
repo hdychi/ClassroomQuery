@@ -68,7 +68,7 @@ public class apiClient{
 
         mRetrofit = new Retrofit.Builder()
 
-                .baseUrl("http://120.27.115.59/test_laravel/public/index.php/api/")
+                .baseUrl("http://open.twtstudio.com/api/v1/")
 
                 .client(client)
 

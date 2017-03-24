@@ -50,6 +50,7 @@ public class homePagePresenter {
         this.condition1_buiding = condition1_buiding;
         this.condition2_time = condition2_time;
         this.checkState3 = checkState3;
+
         onErrorListener mErrorListener = new onErrorListener() {
             @Override
             public void OnError(Throwable e) {
@@ -67,9 +68,13 @@ public class homePagePresenter {
                 if(classrooms!=null) {
                    synchronized (this) {
                        Log.i("Presenter", "返回数据不为空");
+                       curClassroomBeen.clear();
                        for (FreeRoom2.FreeRoom mroom : classrooms) {
-                           if(!mroom.getState().equals("上课中"))
-                           curClassroomBeen.add(new ClassroomBean(mroom));
+                           if(!mroom.getState().equals("上课中")) {
+                               ClassroomBean classroomBean = new ClassroomBean(mroom);
+                               classroomBean.setBuilding(build);
+                               curClassroomBeen.add(classroomBean);
+                           }
                        }
                        mController.onNowClassroomReceived(curClassroomBeen);
                    }
@@ -81,7 +86,7 @@ public class homePagePresenter {
             }
         };
 
-        curClassroomBeen.clear();
+
 
 
 

@@ -1,4 +1,4 @@
-package course.labs.classroomquery.homePage;
+package course.labs.classroomquery.common;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

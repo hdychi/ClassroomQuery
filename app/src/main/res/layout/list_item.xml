@@ -109,14 +109,7 @@
                    android:id="@+id/image5"
                    android:scaleType="fitCenter"
                    android:visibility="invisible"/>
-               <ImageView
-                   android:layout_width="130px"
-                   android:layout_height="46px"
-                   android:layout_margin="3dp"
-                   android:layout_weight="1"
-                   android:id="@+id/image6"
-                   android:scaleType="fitCenter"
-                   android:visibility="invisible"/>
+
 
 
 

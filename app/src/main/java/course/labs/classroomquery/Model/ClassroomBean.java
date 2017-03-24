@@ -18,7 +18,7 @@ public class ClassroomBean {
     //是否被占用、即将被占用
   //  private boolean occupied;
  //   private boolean willBeOccupied;
-    private String building;
+    private int building;
     private String state;
     //是否已收藏
     private boolean collected;
@@ -45,7 +45,7 @@ public class ClassroomBean {
    public ClassroomBean(boolean hasHeat, boolean hasElectricity, boolean hasAC,
                         boolean nearToliet, boolean nearWater,
                         boolean inPeiyangyuan,
-                        boolean occupied, boolean willBeOccupied, boolean collected, String building, String classroom) {
+                        boolean occupied, boolean willBeOccupied, boolean collected, int building, String classroom) {
 
         this.hasHeat = hasHeat;
         this.hasElectricity = hasElectricity;
@@ -131,10 +131,10 @@ public class ClassroomBean {
    /* public void setWillBeOccupied(boolean willBeOccupied) {
         this.willBeOccupied = willBeOccupied;
     }*/
-    public String getBuilding(){
+    public int getBuilding(){
         return this.building;
     }
-    public void setBuilding(String building1){
+    public void setBuilding(int building1){
         this.building = building1;
     }
     public boolean isCollected(){

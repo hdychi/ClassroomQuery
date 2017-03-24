@@ -6,15 +6,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/frame3">
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:id = "@+id/appBar3"
-            android:background="@color/purple">
+        android:id="@+id/frame3"
+        android:background="@color/purple">
 
-
-        </android.support.v7.widget.Toolbar>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,11 +20,11 @@
 
             />
         <Button
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/classroom_icon_back"
-
-            android:layout_alignLeft="@id/appBar3"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
 
             android:id="@+id/backButton3"
             />
