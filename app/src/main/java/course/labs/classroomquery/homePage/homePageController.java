@@ -10,5 +10,5 @@ import course.labs.classroomquery.Model.ClassroomBean;
 public interface homePageController {
     void onNowClassroomReceived(Set<ClassroomBean> classroomBeen);
 
-    void onError();
+    void onError(int build);
 }

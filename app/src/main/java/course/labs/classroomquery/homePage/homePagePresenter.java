@@ -55,7 +55,7 @@ public class homePagePresenter {
             @Override
             public void OnError(Throwable e) {
 
-                mController.onError();
+                mController.onError(build);
 
             }
         };
@@ -90,10 +90,10 @@ public class homePagePresenter {
 
 
 
-        apisubscriber subscriber = new apisubscriber(mContext,mNextListener,mErrorListener);
+           apisubscriber subscriber = new apisubscriber(mContext, mNextListener, mErrorListener);
 
 
-        ( new apiClient()).getFreeClassroom(this,subscriber,build,getWeek(),time, CommonPrefUtil.getToken());
+           (new apiClient()).getFreeClassroom(this, subscriber, build, getWeek(), time, CommonPrefUtil.getToken());
 
 
 

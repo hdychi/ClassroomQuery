@@ -208,7 +208,11 @@ public class MainActivity extends AppCompatActivity implements ViewModel{
         }
 
     }
-
+    @Override
+    protected void onResume(){
+        super.onResume();
+        pxTOdP();
+    }
     public void initialViews() {
         frame1 = (FrameLayout) findViewById(R.id.frame1);
         mainTable = (LinearLayout) findViewById(R.id.mainTable);
@@ -710,7 +714,7 @@ public class MainActivity extends AppCompatActivity implements ViewModel{
                 }
             }
             for (int i = 4; i < 34; i++) {
-                if (checkState1[i]) {
+                if (checkState1[i]&&i!=32) {
 
                     condition1_buiding.add(Integer.valueOf(i - 4 + 30 + 1));
                 }
@@ -802,11 +806,13 @@ public class MainActivity extends AppCompatActivity implements ViewModel{
                }*/
 
             @Override
-            public void onError() {
+            public void onError(int build) {
                 Log.i("Controller", "OnError");
-                swipeRefreshLayout.setRefreshing(false);
+
                 addTotalCnt();
-                wrongTextview.setVisibility(View.VISIBLE);
+
+
+                    wrongTextview.setVisibility(View.VISIBLE);
 
             }
         };
@@ -1131,6 +1137,10 @@ public class MainActivity extends AppCompatActivity implements ViewModel{
         };
         getUserIdPresenter mPresenter = new getUserIdPresenter(this,mController);
         mPresenter.getUserId(CommonPrefUtil.getToken());
+    }
+    public void pxTOdP(){
+        float scale = getResources().getDisplayMetrics().density;
+        Log.i("缩放尺寸",scale+"");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
