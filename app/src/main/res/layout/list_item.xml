@@ -30,14 +30,12 @@
                    android:layout_weight="10"
                    />
                <Button
-                   android:layout_width="35dp"
+                   android:layout_width="30dp"
                    android:layout_height="32dp"
                    android:layout_gravity="center"
                    android:layout_weight="1"
                    android:id="@+id/clickButton"
                    android:background="@drawable/classroom_icon_uncollected"/>
-
-
 
 
        </LinearLayout>
